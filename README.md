@@ -18,7 +18,7 @@ Place your scripts in the appropriate folders:
 ### Notes
 
 - Make sure all scripts have been marked as executable with `chmod +x`.
-- Terminal scripts require an active X session and a terminal emulator (e.g., Konsole or lxterminal).
+- Terminal scripts require an active X session and an installed compatable terminal emulator.
 - Only use background scripts if you have no intent to later view or interact with the script.
 
 ## Prerequisites
