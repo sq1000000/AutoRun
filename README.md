@@ -34,14 +34,14 @@ Place your scripts in the appropriate folders:
 mkdir -p ~/startup
 git clone https://github.com/sq1000000/AutoRun.git ~/startup
 cd ~/startup/other
-./install_service $USER
+./install_service.sh $USER
 ```
 
 ## How to uninstall
 
 ```
 cd ~/startup/other
-./uninstall_service
+./uninstall_service.sh
 rm -rf ~/startup
 cd $HOME
 ```
