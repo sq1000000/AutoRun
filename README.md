@@ -18,7 +18,7 @@ Place your scripts in the appropriate folders:
 ### Notes
 
 - Make sure all scripts have been marked as executable with `chmod +x`.
-- Terminal scripts require an active X session and an installed compatable terminal emulator.
+- Terminal scripts require an active X session and a compatable terminal emulator.
 - Only use background scripts if you have no intent to later view or interact with the script.
 
 ## Prerequisites
@@ -35,6 +35,7 @@ mkdir -p ~/startup
 git clone https://github.com/sq1000000/AutoRun.git ~/startup
 cd ~/startup/other
 ./install_service.sh $USER
+cd $HOME
 ```
 
 ## How to uninstall
