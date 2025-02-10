@@ -1,0 +1,16 @@
+[Unit]
+Description=Run startup script after UI loads
+After=graphical.target
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/startup
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/pi/.Xauthority
+Type=oneshot
+ExecStart=/home/pi/startup/startup.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=graphical.target
+

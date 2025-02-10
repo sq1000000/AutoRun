@@ -1,0 +1,5 @@
+# Ignore macOS .DS_Store files
+.DS_Store
+
+# Ignore the user specific 'startup.service.modified' file
+other/startup.service.modified

@@ -1,0 +1,3 @@
+# Replace the 'terminal' variable to run the scripts in the 'terminal/' folder with a different terminal emulator. Currently the only two options are lxterminal and konsole.
+
+terminal: lxterminal
