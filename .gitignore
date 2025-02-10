@@ -3,3 +3,8 @@
 
 # Ignore the user specific 'startup.service.modified' file
 other/startup.service.modified
+
+# Ignore custom user made scripts
+background/*.sh
+screen/*.sh
+terminal/*.sh
