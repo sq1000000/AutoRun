@@ -3,7 +3,7 @@
 BASEDIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Directory containing the screen scripts
-SCRIPT_DIR="$BASEDIR/screen"
+SCRIPT_DIR="$BASEDIR/../screen"
 
 # Iterate through each shell script in the directory
 for SCRIPT in "$SCRIPT_DIR"/*.sh; do

@@ -3,7 +3,7 @@
 BASEDIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Directory containing the terminal scripts
-SCRIPT_DIR="$BASEDIR/terminal"
+SCRIPT_DIR="$BASEDIR/../terminal"
 
 # Path to the variables file
 VARIABLES_FILE="$BASEDIR/variables.yaml"

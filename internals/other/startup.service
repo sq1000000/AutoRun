@@ -4,11 +4,11 @@ After=graphical.target
 
 [Service]
 User=pi
-WorkingDirectory=/home/pi/startup
+WorkingDirectory=/home/pi/startup/internals
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/home/pi/.Xauthority
 Type=oneshot
-ExecStart=/home/pi/startup/startup.sh
+ExecStart=/home/pi/startup/internals/startup.sh
 RemainAfterExit=yes
 
 [Install]
