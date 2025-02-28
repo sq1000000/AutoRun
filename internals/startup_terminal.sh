@@ -1,49 +1,47 @@
 #!/bin/bash
-# Determine the base directory (where this script is located)
+# startup_terminal.sh - Open terminal tabs/windows to run scripts from the terminal directory.
+# Uses the default shell ($SHELL) and respects the terminal emulator defined in variables.yaml.
+
 BASEDIR="$(cd "$(dirname "$0")" && pwd)"
-
-# Directory containing the terminal scripts
 SCRIPT_DIR="$BASEDIR/../terminal"
-
-# Path to the variables file
 VARIABLES_FILE="$BASEDIR/variables.yaml"
 
-# Read the terminal emulator from variables.yaml.
-# Expected format in variables.yaml: terminal: lxterminal
+# Handle no scripts gracefully
+shopt -s nullglob
+SCRIPTS=("$SCRIPT_DIR"/*.sh)
+shopt -u nullglob
+
+if [ ${#SCRIPTS[@]} -eq 0 ]; then
+    echo "No scripts found in $SCRIPT_DIR. Exiting."
+    exit 0
+fi
+
+# Read terminal emulator from variables.yaml (default: konsole)
 if [ -f "$VARIABLES_FILE" ]; then
-    TERMINAL_EMULATOR=$(awk -F": " '/^terminal:/{print $2}' "$VARIABLES_FILE")
+    TERMINAL_EMULATOR=$(awk -F": " '/^terminal:/{print $2}' "$VARIABLES_FILE" | xargs)
 else
-    # Default to konsole if the variables file is not found.
     TERMINAL_EMULATOR="konsole"
 fi
 
-# Trim any leading/trailing whitespace.
-TERMINAL_EMULATOR=$(echo "$TERMINAL_EMULATOR" | xargs)
+# Trim whitespace and lowercase for consistency
+TERMINAL_EMULATOR=$(echo "$TERMINAL_EMULATOR" | tr '[:upper:]' '[:lower:]' | xargs)
 
-if [ "$TERMINAL_EMULATOR" == "konsole" ]; then
-    # For konsole, use DBus to open new tabs.
-    konsole --noclose &
-    sleep 2
-    # Get the DBus service for konsole (assumes one is returned).
-    KONSOLE_DBUS=$(qdbus | grep konsole | tail -1)
+case "$TERMINAL_EMULATOR" in
+    konsole)
+        # Konsole: Open first script in new window, others in tabs
+        konsole --noclose -e "$SHELL" -c "$SHELL \"${SCRIPTS[0]}\"; exec $SHELL" &
+        
+        # Open remaining scripts in new tabs after a short delay
+        for ((i = 1; i < ${#SCRIPTS[@]}; i++)); do
+            sleep 0.3
+            konsole --new-tab -e "$SHELL" -c "$SHELL \"${SCRIPTS[i]}\"; exec $SHELL" &
+        done
+        ;;
 
-    # Get all scripts in the directory as an array.
-    SCRIPTS=("$SCRIPT_DIR"/*.sh)
-
-    # Run the first script in the existing tab (Session 1).
-    qdbus "$KONSOLE_DBUS" /Sessions/1 runCommand "$SHELL \"${SCRIPTS[0]}\"; exec $SHELL"
-
-    # Open the remaining scripts in new tabs.
-    for ((i = 1; i < ${#SCRIPTS[@]}; i++)); do
-      SESSION_ID=$(qdbus "$KONSOLE_DBUS" /Windows/1 newSession)
-      sleep 1
-      qdbus "$KONSOLE_DBUS" /Sessions/"$SESSION_ID" runCommand "$SHELL \"${SCRIPTS[i]}\"; exec $SHELL"
-    done
-else
-    # For lxterminal (which does not support tabs natively), launch each script in a new window.
-    # Each window runs the command: $SHELL "$SCRIPT"; exec $SHELL
-    for SCRIPT in "$SCRIPT_DIR"/*.sh; do
-         "$TERMINAL_EMULATOR" -e "$SHELL" -c "$SHELL \"$SCRIPT\"; exec $SHELL" &
-    done
-fi
-
+    lxterminal|*)
+        # LXTerminal (or fallback): Open each script in a new window
+        for SCRIPT in "${SCRIPTS[@]}"; do
+            "$TERMINAL_EMULATOR" -e "$SHELL" -c "$SHELL \"$SCRIPT\"; exec $SHELL" &
+        done
+        ;;
+esac

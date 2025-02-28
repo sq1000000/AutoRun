@@ -32,6 +32,14 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# Convert the final file to Unix-style line endings
+if command -v dos2unix >/dev/null 2>&1; then
+    sudo dos2unix /etc/systemd/system/startup.service
+    echo "Converted /etc/systemd/system/startup.service to Unix-style line endings."
+else
+    echo "Warning: dos2unix not installed. Line endings were not converted."
+fi
+
 # Reload systemd to recognize the new service unit file
 echo "Reloading systemd daemon..."
 sudo systemctl daemon-reload
@@ -45,4 +53,3 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Service installed and enabled successfully."
-

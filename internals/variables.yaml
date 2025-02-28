@@ -1,3 +1,5 @@
 # Replace the 'terminal' variable to run the scripts in the 'terminal/' folder with a different terminal emulator. Currently the only two options are lxterminal and konsole.
 
+# Note that running with konsole requires the dbus package to be installed.
+
 terminal: lxterminal
